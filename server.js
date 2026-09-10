@@ -19,6 +19,14 @@ const DB_PATH = process.env.DB_PATH || path.join(__dirname, "data", "app.db");
 fs.mkdirSync(path.dirname(DB_PATH), { recursive: true });
 
 const db = new DatabaseSync(DB_PATH);
+
+// WAL lets reads proceed while a write is in flight and survives an abrupt
+// container stop far better than the default rollback journal — Railway sends
+// SIGTERM and moves on, so a half-applied write is a real risk. busy_timeout
+// makes a concurrent writer wait for the lock instead of failing immediately.
+db.exec("PRAGMA journal_mode = WAL");
+db.exec("PRAGMA busy_timeout = 5000");
+db.exec("PRAGMA synchronous = NORMAL");
 db.exec(`
   CREATE TABLE IF NOT EXISTS docs (
     path TEXT PRIMARY KEY,
@@ -62,7 +70,35 @@ function writeDoc(docPath, value) {
 const app = express();
 app.use(express.json({ limit: "10mb" }));
 
+// Railway polls this to decide whether a new deploy is healthy enough to
+// replace the running one. It touches the database on purpose: a process that
+// is listening but can't read its own volume is not actually up.
+app.get("/health", (req, res) => {
+  try {
+    db.prepare("SELECT 1").get();
+    res.json({ ok: true, db: DB_PATH });
+  } catch (e) {
+    res.status(503).json({ ok: false, error: e.message });
+  }
+});
+
 const apiRouter = express.Router();
+
+// Whole-database dump, so there is a way to get the data out that doesn't
+// involve the Railway volume. Registered before /doc/* so "export" is never
+// read as a document path.
+apiRouter.get("/export", (req, res, next) => {
+  try {
+    const rows = db.prepare("SELECT path, data, updated_at FROM docs ORDER BY path").all();
+    const docs = {};
+    for (const row of rows) docs[row.path] = JSON.parse(row.data);
+    const stamp = new Date().toISOString().replace(/[:.]/g, "-");
+    res.setHeader("Content-Disposition", `attachment; filename="know-your-numbers-${stamp}.json"`);
+    res.json({ exportedAt: new Date().toISOString(), count: rows.length, docs });
+  } catch (e) {
+    next(e);
+  }
+});
 
 apiRouter.get("/doc/*path", (req, res, next) => {
   try {
@@ -121,6 +157,28 @@ app.use((req, res, next) => {
   res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
   console.log(`Know Your Numbers running on port ${PORT} (db: ${DB_PATH})`);
 });
+
+// Railway sends SIGTERM on every redeploy. Without this the process is killed
+// mid-request and the database is closed by the OS rather than by SQLite.
+function shutdown(signal) {
+  console.log(`${signal} received — finishing in-flight requests, then closing the database.`);
+  server.close(() => {
+    try {
+      db.close();
+    } catch (e) {
+      console.error("error closing database:", e.message);
+    }
+    process.exit(0);
+  });
+  // Don't hang forever on a wedged connection.
+  setTimeout(() => {
+    console.error("shutdown timed out — exiting anyway");
+    process.exit(1);
+  }, 10000).unref();
+}
+
+process.on("SIGTERM", () => shutdown("SIGTERM"));
+process.on("SIGINT", () => shutdown("SIGINT"));

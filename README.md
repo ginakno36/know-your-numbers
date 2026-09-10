@@ -51,7 +51,27 @@ path inside the mounted volume is what makes the data survive redeploys.
 To confirm it worked: enter something, redeploy the service, and reload the
 page. If your data is still there, the volume is wired up correctly.
 
+## Backing up the data
+
+The whole database is downloadable as one JSON file:
+
+```
+https://<your-app-url>/api/export
+```
+
+The Railway volume is the only copy of the data, so download this
+periodically — a deleted volume or a mistaken redeploy has no undo.
+
+## Health check
+
+`GET /health` returns `{"ok":true}` and actually queries the database, so a
+process that is listening but can't read its volume reports unhealthy rather
+than silently serving a broken app. Railway is configured to poll it
+(`railway.json`), and won't swap a new deploy in until it passes.
+
 ## No password protection
+
+
 
 By request, this deployment has no login — anyone with the URL can open and
 edit the data. Treat the Railway URL itself as the thing to keep private. If
