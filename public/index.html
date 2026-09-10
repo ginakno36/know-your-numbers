@@ -5,6 +5,17 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Know Your Numbers</title>
 <link rel="stylesheet" href="styles.css">
+<script>
+  // Inline and before paint on purpose: reading the saved theme after the
+  // stylesheet would flash the wrong world on every load.
+  (function(){
+    try{
+      var t = localStorage.getItem("kyn-theme");
+      if(t !== "dark" && t !== "light") t = "light";
+      document.documentElement.setAttribute("data-theme", t);
+    }catch(e){ document.documentElement.setAttribute("data-theme","light"); }
+  })();
+</script>
 </head>
 <body>
 
@@ -15,9 +26,20 @@
       <h1>Know Your Numbers</h1>
       <div class="sub">One system, two ledgers, and the cash flow waterfall between them — built around the buckets: Checking, Working Capital, and Tax.</div>
     </div>
+    <div class="header-actions">
+    <button type="button" class="theme-toggle" id="themeToggle" aria-label="Switch to dark theme" title="Switch theme">
+      <svg class="ic-sun" viewBox="0 0 20 20" aria-hidden="true" focusable="false">
+        <circle cx="10" cy="10" r="4" fill="none" stroke="currentColor" stroke-width="1.6"/>
+        <path d="M10 1.6v2.2M10 16.2v2.2M18.4 10h-2.2M3.8 10H1.6M15.9 4.1l-1.6 1.6M5.7 14.3l-1.6 1.6M15.9 15.9l-1.6-1.6M5.7 5.7L4.1 4.1" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+      </svg>
+      <svg class="ic-moon" viewBox="0 0 20 20" aria-hidden="true" focusable="false">
+        <path d="M16.5 12.4A7 7 0 0 1 7.6 3.5a7 7 0 1 0 8.9 8.9Z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+      </svg>
+    </button>
     <div class="sync-status offline" id="syncStatus">
       <span class="sync-dot"></span>
       <span id="syncLabel">Not saving (this tab only)</span>
+    </div>
     </div>
   </header>
 

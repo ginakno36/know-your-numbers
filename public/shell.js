@@ -5,6 +5,26 @@
   var currentMode = "business";
   var currentSection = "transactions";
 
+  // Theme. The initial value is applied inline in <head> before paint; this
+  // only handles switching and persistence.
+  function currentTheme(){
+    return document.documentElement.getAttribute("data-theme") === "dark" ? "dark" : "light";
+  }
+  function applyTheme(theme){
+    document.documentElement.setAttribute("data-theme", theme);
+    var btn = document.getElementById("themeToggle");
+    if(btn) btn.setAttribute("aria-label", theme === "dark" ? "Switch to light theme" : "Switch to dark theme");
+    try{ localStorage.setItem("kyn-theme", theme); }catch(e){}
+  }
+  function initTheme(){
+    var btn = document.getElementById("themeToggle");
+    if(!btn) return;
+    applyTheme(currentTheme());
+    btn.addEventListener("click", function(){
+      applyTheme(currentTheme() === "dark" ? "light" : "dark");
+    });
+  }
+
   function setSyncStatus(state, label){
     var el = document.getElementById("syncStatus");
     el.className = "sync-status " + state;
@@ -84,5 +104,6 @@
       }
     }catch(e){ /* best-effort */ }
   }
+  initTheme();
   initDb();
 })();

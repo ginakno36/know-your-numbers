@@ -5,18 +5,18 @@
      otherwise ignore the hidden attribute and show when they should not. */
   [hidden]{ display:none !important; }
   :root{
-    /* Ground and ink. White page, near-black type: the reference world is
-       Threads' hairline-on-white, with MacroFactor's card structure over it. */
-    --paper:#ffffff;
+    /* Light: MacroFactor's ground rule — a soft grey page so white cards lift
+       off it, rather than white-on-white separated only by a hairline. */
+    --paper:#f3f3f5;
     --ink:#0a0a0a;
     --surface:#ffffff;
-    --surface-2:#f6f6f7;
+    --surface-2:#f7f7f9;
     --surface-ink:#0a0a0a;
-    --rule: #e6e6ea;
-    --rule-surface: #e6e6ea;
+    --rule: #e4e4ea;
+    --rule-surface: #e8e8ee;
     --muted:#6e6e73;
     --muted-surface:#6e6e73;
-    --shadow: 0 1px 2px rgba(10,10,10,.05), 0 4px 10px -6px rgba(10,10,10,.10);
+    --shadow: 0 1px 2px rgba(10,10,10,.05), 0 6px 16px -8px rgba(10,10,10,.14);
 
     /* Type. An Operate surface on a desktop Mac: the platform sans is what
        both reference apps actually use, and its tabular figures beat a mono
@@ -27,8 +27,8 @@
        tinted ground under table headers, totals and pills, and always carries
        dark text. --solid is the black of a committed control, and always
        carries white. Collapsing them turns every header black-on-black. */
-    --fill:#f0f0f2;
-    --fill-strong:#e7e7ec;
+    --fill:#ededf1;
+    --fill-strong:#e3e3e9;
     --solid:#0a0a0a;
     --solid-ink:#ffffff;
 
@@ -47,8 +47,44 @@
     --neg:#b3261e;
     --pos-wash: rgba(18,112,58,.10);
     --neg-wash: rgba(179,38,30,.10);
+    --pos-dot: var(--pos);
 
     --focus:#0a84ff;
+    color-scheme: light;
+  }
+
+  /* Dark is the app's original world, kept intact rather than discarded:
+     navy page, cream cards, dusty-blue tinted grounds. It maps onto the same
+     token roles, so every rule written for light works here untouched. */
+  :root[data-theme="dark"]{
+    --paper:#021023;
+    --ink:#f6f2ee;
+    --surface:#f6f2ee;
+    --surface-2:#ece4d8;
+    --surface-ink:#021023;
+    --rule: rgba(246,242,238,.16);
+    --rule-surface: rgba(2,16,35,.14);
+    --muted:#93a2b8;
+    --muted-surface:#5b6472;
+    --shadow: 0 1px 2px rgba(0,0,0,.35), 0 10px 30px -10px rgba(0,0,0,.6);
+
+    --fill:#bbc6d4;
+    --fill-strong:#a7b4c6;
+    /* A committed control on a navy page is cream, not black. */
+    --solid:#f6f2ee;
+    --solid-ink:#021023;
+    --wash: rgba(187,198,212,.14);
+
+    /* Semantic figures sit on the cream cards here, so they stay dark;
+       the status dot sits on navy and needs to lift off it. */
+    --pos:#2f7d4a;
+    --neg:#a8271f;
+    --pos-wash: rgba(47,125,74,.14);
+    --neg-wash: rgba(168,39,31,.14);
+    --pos-dot:#7fc08e;
+
+    --focus:#7fb2ff;
+    color-scheme: dark;
   }
   html[data-mode="business"]{ --accent:var(--biz-accent); --accent-strong:var(--biz-accent-strong); --wash:var(--biz-wash); }
   html[data-mode="personal"]{ --accent:var(--per-accent); --accent-strong:var(--per-accent-strong); --wash:var(--per-wash); }
@@ -74,13 +110,30 @@
   }
   .sub{ color:var(--muted); font-size:14px; max-width:60ch; margin-top:4px; }
 
+  .header-actions{ display:flex; align-items:center; gap:10px; flex:none; }
+
+  .theme-toggle{
+    display:inline-flex; align-items:center; justify-content:center;
+    width:34px; height:34px; padding:0; flex:none;
+    border:1px solid var(--rule); border-radius:99px;
+    background:transparent; color:var(--muted); cursor:pointer;
+    transition:color .15s ease, border-color .15s ease, background-color .15s ease;
+  }
+  .theme-toggle:hover{ color:var(--ink); border-color:var(--ink); }
+  .theme-toggle svg{ width:17px; height:17px; display:block; }
+  /* Show the world you'd switch TO, not the one you're in. */
+  .theme-toggle .ic-sun{ display:none; }
+  .theme-toggle .ic-moon{ display:block; }
+  :root[data-theme="dark"] .theme-toggle .ic-sun{ display:block; }
+  :root[data-theme="dark"] .theme-toggle .ic-moon{ display:none; }
+
   .sync-status{
     display:flex; align-items:center; gap:7px; font-size:12px; color:var(--muted);
     padding:6px 12px; border:1px solid var(--rule); border-radius:99px; white-space:nowrap;
     background:transparent;
   }
   .sync-dot{ width:7px; height:7px; border-radius:50%; background:var(--muted); flex:none; }
-  .sync-status.saved .sync-dot{ background:var(--pos); }
+  .sync-status.saved .sync-dot{ background:var(--pos-dot); }
   .sync-status.saving .sync-dot{ background:var(--muted); }
   .sync-status.offline .sync-dot{ background:var(--muted); }
 
@@ -90,7 +143,7 @@
     margin-bottom:26px;
   }
   .mode-toggle{
-    display:inline-flex; padding:4px; background:var(--surface-2); border:1px solid var(--rule); border-radius:12px; gap:4px;
+    display:inline-flex; padding:4px; background:var(--wash); border:1px solid var(--rule); border-radius:12px; gap:4px;
   }
   .mode-btn{
     font:inherit; font-size:13.5px; font-weight:700; padding:9px 20px; border-radius:9px; border:none;
@@ -111,16 +164,16 @@
     border:1px solid var(--rule); border-radius:14px; background:var(--surface);
   }
   .owners-pay .thread{ display:none; }
-  .owners-pay .label{ font-size:11px; text-transform:uppercase; letter-spacing:.07em; color:var(--muted); font-weight:600; }
+  .owners-pay .label{ font-size:11px; text-transform:uppercase; letter-spacing:.07em; color:var(--muted-surface); font-weight:600; }
   .owners-pay .amt{
     font-family:var(--font-sans); font-size:30px; font-weight:700; line-height:1.15;
     letter-spacing:-.025em; font-variant-numeric:tabular-nums; margin:2px 0 1px;
-    /* Nothing populates this yet, so it always renders the em-dash placeholder.
-       Muted keeps the empty state from being the loudest thing in the header;
-       swap to var(--ink) the moment a real figure lands here. */
-    color:var(--muted);
+    /* Muted is the empty state; .has-value promotes it to full ink. This card
+       sits on --surface, so both come from the surface pair — the page pair
+       renders cream-on-cream in the dark world. */
+    color:var(--muted-surface);
   }
-  .owners-pay .cap{ font-size:12px; color:var(--muted); }
+  .owners-pay .cap{ font-size:12px; color:var(--muted-surface); }
   .owners-pay .op-head{ display:flex; align-items:center; gap:6px; }
 
   /* Info affordance. Authored SVG on currentColor so it inherits the label's
@@ -129,11 +182,11 @@
   .info-btn{
     display:inline-flex; align-items:center; justify-content:center;
     width:18px; height:18px; padding:0; border:none; border-radius:50%;
-    background:none; color:var(--muted); cursor:help;
+    background:none; color:var(--muted-surface); cursor:help;
     transition:color .15s ease, background-color .15s ease;
   }
   .info-btn svg{ width:14px; height:14px; display:block; }
-  .info-btn:hover{ color:var(--ink); background:var(--wash); }
+  .info-btn:hover{ color:var(--surface-ink); background:var(--wash); }
 
   .info-pop{
     /* The card lives at the right edge of the header, so anchor to the right;
@@ -156,7 +209,7 @@
   .info-btn:focus-visible ~ .info-pop{ opacity:1; visibility:visible; transform:translateY(0); }
 
   /* Real figure once a distributions total exists; muted while empty. */
-  .owners-pay .amt.has-value{ color:var(--ink); }
+  .owners-pay .amt.has-value{ color:var(--surface-ink); }
   .owners-pay .amt:not(.has-value){ font-size:22px; }
 
   /* ---------- sub-nav ---------- */
@@ -546,7 +599,7 @@
     border:none; padding:9px 16px; border-radius:9px; cursor:pointer;
     transition:background .15s ease, transform .05s ease;
   }
-  button.primary:hover{ background:#262629; }
+  button.primary:hover{ background:var(--solid); filter:brightness(1.35); }
   button.primary:active{ transform:translateY(1px); }
   button.ghost{
     font:inherit; font-size:12.5px; font-weight:600; background:transparent; color:var(--surface-ink);
@@ -613,17 +666,17 @@
      The parts the design doesn't draw still carry it: selection, caret,
      focus ring and scrollbars all ship with defaults belonging to no
      design system. */
-  ::selection{ background:#0a0a0a; color:#fff; }
-  html{ accent-color:var(--solid); caret-color:var(--solid); scrollbar-color:#c9c9cf transparent; }
+  ::selection{ background:var(--solid); color:var(--solid-ink); }
+  html{ accent-color:var(--solid); caret-color:var(--ink); scrollbar-color:var(--fill-strong) transparent; background:var(--paper); }
   a{ color:var(--ink); text-underline-offset:3px; text-decoration-thickness:1px; }
 
   *::-webkit-scrollbar{ width:11px; height:11px; }
   *::-webkit-scrollbar-track{ background:transparent; }
   *::-webkit-scrollbar-thumb{
-    background:#c9c9cf; border-radius:99px;
+    background:var(--fill-strong); border-radius:99px;
     border:3px solid var(--paper); background-clip:padding-box;
   }
-  *::-webkit-scrollbar-thumb:hover{ background:#a9a9b2; background-clip:padding-box; }
+  *::-webkit-scrollbar-thumb:hover{ background:var(--muted); background-clip:padding-box; }
 
   :focus-visible{ outline:2px solid var(--focus); outline-offset:2px; border-radius:4px; }
 
