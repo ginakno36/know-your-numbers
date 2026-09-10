@@ -24,8 +24,12 @@ const db = new DatabaseSync(DB_PATH);
 // container stop far better than the default rollback journal — Railway sends
 // SIGTERM and moves on, so a half-applied write is a real risk. busy_timeout
 // makes a concurrent writer wait for the lock instead of failing immediately.
-db.exec("PRAGMA journal_mode = WAL");
+// busy_timeout MUST come first: converting an existing database to WAL needs
+// exclusive access, and if another connection still holds it (an overlapping
+// redeploy, say) the conversion waits on the default timeout of zero — which
+// blocks startup indefinitely rather than failing fast.
 db.exec("PRAGMA busy_timeout = 5000");
+db.exec("PRAGMA journal_mode = WAL");
 db.exec("PRAGMA synchronous = NORMAL");
 db.exec(`
   CREATE TABLE IF NOT EXISTS docs (
