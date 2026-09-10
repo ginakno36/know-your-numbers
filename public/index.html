@@ -7,6 +7,10 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
 <style>
+  /* The page was authored against a host that supplied this reset. Standalone,
+     elements with an explicit display (e.g. the flex banners/bars below) would
+     otherwise ignore the hidden attribute and show when they should not. */
+  [hidden]{ display:none !important; }
   :root{
     --paper:#021023;
     --ink:#f6f2ee;
