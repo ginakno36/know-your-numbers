@@ -1,0 +1,16 @@
+{
+  "name": "know-your-numbers",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Know Your Numbers — business + personal finance dashboard",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=22.5.0"
+  },
+  "dependencies": {
+    "express": "^5.0.0"
+  }
+}
