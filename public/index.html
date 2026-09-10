@@ -4,8 +4,6 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Know Your Numbers</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -14,7 +12,6 @@
 
   <header class="top">
     <div>
-      <div class="eyebrow" id="eyebrow">Business mode</div>
       <h1>Know Your Numbers</h1>
       <div class="sub">One system, two ledgers, and the cash flow waterfall between them — built around the buckets: Checking, Working Capital, and Tax.</div>
     </div>
@@ -46,7 +43,7 @@
   </nav>
 
   <!-- ===== BUSINESS PANELS ===== -->
-  <section class="panel mode-panel" data-mode="business" data-section="transactions" style="padding:0; background:transparent; border:none; box-shadow:none; color:var(--ink);">
+  <section class="mode-panel" data-mode="business" data-section="transactions">
     <div id="biz-dbWarning" class="warn-banner" hidden>⚠ Couldn't connect to saved storage — working in this browser tab only. Changes won't be there next time you open this page.</div>
     <div class="month-row">
       <div class="tab-bar">
@@ -160,7 +157,7 @@
     </div>
   </section>
 
-  <section class="panel mode-panel" data-mode="business" data-section="annual" hidden style="padding:0; background:transparent; border:none; box-shadow:none; color:var(--ink);">
+  <section class="mode-panel" data-mode="business" data-section="annual" hidden>
     <div class="month-row">
       <div class="year-nav">
         <button type="button" id="biz-annualYearPrev" aria-label="Previous year">‹</button>
@@ -182,7 +179,7 @@
     </section>
   </section>
 
-  <section class="panel mode-panel" data-mode="business" data-section="waterfall" hidden style="padding:0; background:transparent; border:none; box-shadow:none; color:var(--ink);">
+  <section class="mode-panel" data-mode="business" data-section="waterfall" hidden>
     <section class="biz-panel" id="biz-wfPanel" style="border:none; box-shadow:none; border-radius:0;">
       <div class="biz-panel-head" style="cursor:default;">
         <h2>Cash flow waterfall</h2>

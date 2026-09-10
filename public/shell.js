@@ -25,7 +25,7 @@
   function applyMode(mode){
     currentMode = mode;
     document.documentElement.setAttribute("data-mode", mode);
-    document.getElementById("eyebrow").textContent = (mode === "business" ? "Business mode" : "Personal mode");
+    // Mode is shown by the toggle itself; no separate label to update.
     document.querySelectorAll(".mode-btn").forEach(function(btn){
       btn.classList.toggle("active", btn.getAttribute("data-mode") === mode);
     });

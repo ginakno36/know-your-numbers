@@ -1299,7 +1299,11 @@
     var res = computeTotals(all, lookup);
     document.getElementById("biz-sumIncome").textContent = fmtMoney(res.income);
     document.getElementById("biz-sumExpense").textContent = fmtMoney(Math.abs(res.expense));
-    document.getElementById("biz-sumNet").textContent = fmtMoney(res.income + res.expense);
+    var netEl = document.getElementById("biz-sumNet");
+    var net = res.income + res.expense;
+    netEl.textContent = fmtMoney(net);
+    netEl.classList.toggle("pos", net > 0);
+    netEl.classList.toggle("neg", net < 0);
 
     // category totals, grouped — each group its own horizontal bar chart, sorted highest to lowest.
     // bars scale within their own group/section, not the whole ledger, so a group's internal
