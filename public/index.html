@@ -28,10 +28,23 @@
     </div>
     <div class="owners-pay">
       <span class="thread" aria-hidden="true"></span>
-      <div>
-        <div class="label">Owner's pay this month</div>
-        <div class="amt mono" id="ownersPayAmt">—</div>
+      <div class="op-head">
+        <span class="label">Owner's pay this month</span>
+        <span class="info-wrap">
+          <button type="button" class="info-btn" aria-label="How owner's pay is calculated" aria-describedby="ownersPayHelp">
+            <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <circle cx="8" cy="8" r="6.4" fill="none" stroke="currentColor" stroke-width="1.5"/>
+              <path d="M8 7.4v3.8" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              <circle cx="8" cy="4.9" r="0.95" fill="currentColor"/>
+            </svg>
+          </button>
+          <span class="info-pop" id="ownersPayHelp" role="tooltip">
+            The total of this month&rsquo;s <strong>Owners distributions</strong> category &mdash; money moved out of the business to you personally.
+            It sits in the non-deductible group, so it doesn&rsquo;t reduce taxable profit. Categorise a transaction as Owners distributions and it lands here.
+          </span>
+        </span>
       </div>
+      <div class="amt mono" id="ownersPayAmt">—</div>
       <div class="cap">Business distributions → personal income</div>
     </div>
   </div>

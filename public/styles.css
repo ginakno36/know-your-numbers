@@ -121,6 +121,42 @@
     color:var(--muted);
   }
   .owners-pay .cap{ font-size:12px; color:var(--muted); }
+  .owners-pay .op-head{ display:flex; align-items:center; gap:6px; }
+
+  /* Info affordance. Authored SVG on currentColor so it inherits the label's
+     weight rather than sitting on it as a glyph. */
+  .info-wrap{ position:relative; display:inline-flex; }
+  .info-btn{
+    display:inline-flex; align-items:center; justify-content:center;
+    width:18px; height:18px; padding:0; border:none; border-radius:50%;
+    background:none; color:var(--muted); cursor:help;
+    transition:color .15s ease, background-color .15s ease;
+  }
+  .info-btn svg{ width:14px; height:14px; display:block; }
+  .info-btn:hover{ color:var(--ink); background:var(--wash); }
+
+  .info-pop{
+    /* The card lives at the right edge of the header, so anchor to the right;
+       left-anchoring left only ~60px of clearance before overflow. */
+    position:absolute; top:calc(100% + 8px); right:-8px; z-index:40;
+    width:290px; padding:12px 14px;
+    background:var(--solid); color:var(--solid-ink);
+    border-radius:10px; font-size:12.5px; line-height:1.45; font-weight:400;
+    text-transform:none; letter-spacing:0;
+    box-shadow:0 4px 14px -4px rgba(10,10,10,.35);
+    opacity:0; visibility:hidden; transform:translateY(-3px);
+    transition:opacity .16s ease, transform .16s ease, visibility .16s;
+  }
+  .info-pop strong{ font-weight:650; }
+  .info-pop::before{
+    content:""; position:absolute; bottom:100%; right:14px;
+    border:6px solid transparent; border-bottom-color:var(--solid);
+  }
+  .info-wrap:hover .info-pop,
+  .info-btn:focus-visible ~ .info-pop{ opacity:1; visibility:visible; transform:translateY(0); }
+
+  /* Real figure once a distributions total exists; muted while empty. */
+  .owners-pay .amt.has-value{ color:var(--ink); }
 
   /* ---------- sub-nav ---------- */
   .section-tabs{

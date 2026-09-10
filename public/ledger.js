@@ -1240,6 +1240,32 @@
   });
 
   // ---------- render ----------
+  // Owner's pay is the month's "Owners distributions" total — the app's own
+  // model for money leaving the business as personal income. Matched on the
+  // default category id first, then by name, so a renamed or rebuilt category
+  // list still resolves. No match leaves the placeholder in place rather than
+  // reporting a confident zero.
+  function renderOwnersPay(res, lookup){
+    var el = document.getElementById("ownersPayAmt");
+    if(!el) return;
+    var total = null;
+    Object.keys(lookup).forEach(function(id){
+      var entry = lookup[id];
+      var isDistribution = id === "cat_owners_distributions" ||
+        /owner'?s?\s+distribution/i.test(entry.label || "");
+      if(isDistribution && res.totals[id] !== undefined){
+        total = (total || 0) + res.totals[id];
+      }
+    });
+    if(total === null){
+      el.textContent = "\u2014";
+      el.classList.remove("has-value");
+      return;
+    }
+    el.textContent = fmtMoney(Math.abs(total));
+    el.classList.add("has-value");
+  }
+
   function computeTotals(transactions, lookup){
     var totals = {}, counts = {};
     var reviewTotal = 0, reviewCount = 0, income = 0, expense = 0;
@@ -1299,6 +1325,7 @@
     var res = computeTotals(all, lookup);
     document.getElementById("biz-sumIncome").textContent = fmtMoney(res.income);
     document.getElementById("biz-sumExpense").textContent = fmtMoney(Math.abs(res.expense));
+    renderOwnersPay(res, lookup);
     var netEl = document.getElementById("biz-sumNet");
     var net = res.income + res.expense;
     netEl.textContent = fmtMoney(net);
