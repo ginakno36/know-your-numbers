@@ -147,7 +147,10 @@
   }
   .mode-btn{
     font:inherit; font-size:13.5px; font-weight:700; padding:9px 20px; border-radius:9px; border:none;
-    background:transparent; color:var(--muted); cursor:pointer; display:flex; align-items:center; gap:8px;
+    /* Selection is carried by the filled pill, so the unselected label does
+       not also need to be dimmed — muted on the toggle's wash measured 4.1:1
+       in light and 2.9:1 in dark. */
+    background:transparent; color:var(--ink); cursor:pointer; display:flex; align-items:center; gap:8px;
     transition:background .15s ease, color .15s ease;
   }
   .mode-btn .swatch{ display:none; }
@@ -161,7 +164,7 @@
   .owners-pay{
     display:flex; flex-direction:column; align-items:flex-start; gap:2px;
     padding:16px 20px; min-width:260px;
-    border:1px solid var(--rule); border-radius:14px; background:var(--surface);
+    border:none; border-radius:14px; background:var(--surface); box-shadow:var(--shadow);
   }
   .owners-pay .thread{ display:none; }
   .owners-pay .label{ font-size:11px; text-transform:uppercase; letter-spacing:.07em; color:var(--muted-surface); font-weight:600; }
@@ -229,7 +232,7 @@
 
   /* ---------- panels ---------- */
   .panel{
-    background:var(--surface); color:var(--surface-ink); border:1px solid var(--rule-surface);
+    background:var(--surface); color:var(--surface-ink); border:none;
     border-radius:14px; box-shadow:var(--shadow); padding:34px 32px;
   }
   .panel[hidden]{ display:none; }
