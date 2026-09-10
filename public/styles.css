@@ -691,3 +691,18 @@
       transition-duration:.01ms !important; scroll-behavior:auto !important;
     }
   }
+
+  /* ---------- first run ----------
+     Onboarding lives in the empty state rather than in a tour: the panel that
+     already holds the only useful action explains what it will produce. */
+  .first-run-note{
+    margin:0 0 18px; max-width:64ch;
+    font-size:13.5px; line-height:1.55; color:var(--muted-surface);
+  }
+  :root[data-first-run="false"] .first-run-note{ display:none; }
+
+  /* Withhold controls that cannot yet say anything true: an owner's-pay
+     figure with no transactions behind it, and a copy action with nothing
+     to copy. They appear the moment the first import lands. */
+  :root[data-first-run="true"] .owners-pay,
+  :root[data-first-run="true"] #biz-copyCsvBtn{ display:none; }

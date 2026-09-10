@@ -294,6 +294,7 @@
       var idxSnap = await db.doc("biz-settings/monthsIndex").get();
       if(idxSnap.exists) monthsIndex = deepClone(idxSnap.data()) || {};
     }catch(e){ /* keep empty */ }
+    refreshFirstRunFlag();
     var lastMonthKey = null;
     try{
       var prefsSnap = await db.doc("biz-settings/prefs").get();
@@ -356,11 +357,21 @@
     currentYear++; renderMonthTabs();
   });
 
+  // First run is "no data anywhere", not "this month is empty". The header's
+  // owner's-pay figure and the copy-CSV action are meaningless before the
+  // first import, so the flag lets CSS withhold them until they can say
+  // something true.
+  function refreshFirstRunFlag(){
+    var any = Object.keys(monthsIndex).some(function(k){ return monthsIndex[k] > 0; });
+    document.documentElement.setAttribute("data-first-run", any ? "false" : "true");
+  }
+
   async function updateMonthIndex(){
     if(!currentMonthKey) return;
     var count = monthData.transactions.length;
     if(count > 0) monthsIndex[currentMonthKey] = count;
     else delete monthsIndex[currentMonthKey];
+    refreshFirstRunFlag();
     renderMonthTabs();
     if(!dbAvailable) return;
     try{ await db.doc("biz-settings/monthsIndex").set(monthsIndex); }catch(e){ /* non-critical */ }
